@@ -17,3 +17,26 @@ print(f"Expressions: {expr}")
 a = (4 - ((x+h)**2) - (4-(x**2)))/h 
 limit_expr = limit(a, h, 0) 
 print(f"f' ({expr}) = {limit_expr}")
+
+
+from sympy import * 
+x = symbols('x') 
+h = symbols('h') 
+expr = 1/x 
+print(f"Expression: {expr}") 
+a = ((1/(x+h)) - (1/x))/h 
+limit_expr = limit(a, h, 0) 
+print(f"f`({expr}) = {limit_expr}")
+
+
+from sympy import * 
+x = symbols('x') 
+h = symbols('h') 
+#Exp 
+expr = 2*x + 3 
+print(f"Expressions: {expr}") 
+a = (2*(x+h) - 2*(x) + 3)/h 
+limit_expr = limit(a, h, 1) 
+print(f"f' ({expr}) = {limit_expr}") 
+
+
