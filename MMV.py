@@ -1,48 +1,57 @@
 from sympy import * 
  
-x, y = symbols ('x y', Integer = True) 
-expr = eval (input ("Enter Expression: ") ) 
+x, y = symbols('x y') 
  
-fx = diff(expr, x) 
-fy = diff(expr, y) 
+Eqr = eval(input('Enter the Equation: ')) 
+var = Poly(Eqr, x, y) 
+power = var.degree() 
+power -= 1 
+ 
+fx = diff(Eqr, x) 
+fy = diff(Eqr, y) 
 fxx = diff(fx, x) 
 fyy = diff(fy, y) 
 fxy = diff(fx, y) 
  
-print ("\nfx: {}".format (fx), "fy: {}" .format (fy), "fxx: {}".format (fxx), 
-       "fyy: {}".format (fyy), "fxy: {}".format (fxy), sep="\n") 
+. 
  
-criticalPoints = solve((fx, fy),(х, y)) 
+print(f'\nfx: {fx}\nfy: {fy}\nfxx: {fxx}\nfyy: {fyy}\nfxy: {fxy}') 
  
-if type(criticalPoints) is dict: 
-    criticalPoints = [tuple(criticalPoints.values())] 
-# Print critical points 
-print("\nCritical points are:", *criticalPoints, end = "\n\n") 
+cp = list() 
+cp_var = solve((fx, fy), (x, y)) 
  
-subsValues = [] 
-for point in criticalPoints: 
-    value = [] 
-    value.append(fxx.subs(x, point[0])) 
-    value.append(fyy.subs(y, point[1])) 
-    value.append(fxy.subs((x, y), (point[0], point[1]))) 
-    subsValues.append (value) 
+if type(cp_var) == dict: 
+    cp_var = [tuple(cp_var.values())] 
  
-for i in range(len(subsValues)) : 
-    print("fxx at (x, y) = (0}".format(criticalPoints[i]), "is", subsValues[i][0]) 
-    print("fyy at (x, y) = (0}".format(criticalPoints[i]), "is", subsValues[i][1]) 
-    print("fxy at (x, y) = (0}".format(criticalPoints[i]), "is", subsValues[i][2]) 
-    print() 
+  
+for x_val, y_val in cp_var: 
+    if power == 0: 
+        break 
+    cp.append((x_val, y_val)) 
+    power -= 1 
  
-for i in range (len(subsValues)) : 
-    D = subsValues[i][0] * subsValues[i][1] - subsValues[i][2] ** 2 
-    print ("Value of D at", criticalPoints[i], "is", D) 
-    if D == 0: 
-        print("No conclusion at", criticalPoints[i]) 
+print('\nCritical Points are ',end='') 
+for i in cp: 
+    print(i,end='') 
+print() 
+ 
+Values = list() 
+for i in cp: 
+    Values.append([fxx.subs(x,i[0]),fyy.subs(y,i[1]),fxy.subs({x:i[0],y:i[1]})]) 
+ 
+for i,j in zip(Values,cp): 
+    print(f'''\nfxx at (x,y) = {j} is {i[0]} 
+fyy at (x,y) = {j} is {i[1]} 
+fxy at (x,y) = {j} is {i[2]}''') 
+ 
+for i,j in zip(Values,cp): 
+    D = i[0]*i[1]*i[2]**2 
+    print(f'\nValue of D at {j} is {D}') 
+    if D > 0 and i[0] > 0: 
+        print(f'Relative Minima is present at {j}.') 
+    elif D > 0 and i[0] < 0: 
+        print(f'Relative Maxima is present at {j}.') 
     elif D < 0: 
-        print ("Saddle points at", criticalPoints[i]) 
-    elif D > 0: 
-        if subsValues[i][0] > 0: 
-            print ("Relative minima at", criticalPoints[i]) 
-        elif subsValues[i][0] < 0: 
-            print ("Relative maxima at", criticalPoints[i]) 
-    print() 
+        print(f'The Critical Point {j} is a saddle point.') 
+    else: 
+        print(f'No conclusion can be drawn on {j}.') 
